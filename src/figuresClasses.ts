@@ -1,13 +1,37 @@
+export type Shape = 'triangle' | 'circle' | 'rectangle';
+export type Color = 'red' | 'green' | 'blue';
+
 export interface Figure {
-  shape: 'triangle' | 'circle' | 'rectangle';
-  color: 'red' | 'green' | 'blue';
+  shape: Shape;
+  color: Color;
   getArea(): number;
+  describe(): string;
+}
+
+// Utility for consistent area rounding
+function roundArea(area: number): number {
+  return Math.round(area * 100) / 100;
+}
+
+// Triangle validation logic
+function validateTriangle(a: number, b: number, c: number): void {
+  if (a <= 0 || b <= 0 || c <= 0) {
+    throw new Error('Triangle sides must be greater than 0');
+  }
+
+  const longest = Math.max(a, b, c);
+
+  if (longest >= a + b + c - longest) {
+    throw new Error(
+      'Invalid triangle: longest side must be less than sum of the other two',
+    );
+  }
 }
 
 export class Triangle implements Figure {
-  shape: 'triangle' = 'triangle';
+  shape: Shape = 'triangle';
 
-  color: 'red' | 'green' | 'blue';
+  color: Color;
 
   a: number;
 
@@ -15,24 +39,8 @@ export class Triangle implements Figure {
 
   c: number;
 
-  constructor(
-    color: 'red' | 'green' | 'blue',
-    a: number,
-    b: number,
-    c: number,
-  ) {
-    if (a <= 0 || b <= 0 || c <= 0) {
-      throw new Error('Triangle sides must be greater than 0');
-    }
-
-    const longest = Math.max(a, b, c);
-
-    if (longest >= a + b + c - longest) {
-      throw new Error(
-        'Invalid triangle: longest side must be less than sum of the other two',
-      );
-    }
-
+  constructor(color: Color, a: number, b: number, c: number) {
+    validateTriangle(a, b, c);
     this.color = color;
     this.a = a;
     this.b = b;
@@ -40,22 +48,25 @@ export class Triangle implements Figure {
   }
 
   getArea(): number {
-    // Heron's formula
-    const s = (this.a + this.b + this.c) / 2; // semi-perimeter
+    const s = (this.a + this.b + this.c) / 2;
     const area = Math.sqrt(s * (s - this.a) * (s - this.b) * (s - this.c));
 
-    return Math.floor(area * 100) / 100; // round down to hundredths
+    return roundArea(area);
+  }
+
+  describe(): string {
+    return `A ${this.color} triangle - ${this.getArea()}`;
   }
 }
 
 export class Circle implements Figure {
-  shape: 'circle' = 'circle';
+  shape: Shape = 'circle';
 
-  color: 'red' | 'green' | 'blue';
+  color: Color;
 
   radius: number;
 
-  constructor(color: 'red' | 'green' | 'blue', radius: number) {
+  constructor(color: Color, radius: number) {
     if (radius <= 0) {
       throw new Error('Circle radius must be greater than 0');
     }
@@ -66,20 +77,24 @@ export class Circle implements Figure {
   getArea(): number {
     const area = Math.PI * this.radius ** 2;
 
-    return Math.floor(area * 100) / 100;
+    return roundArea(area);
+  }
+
+  describe(): string {
+    return `A ${this.color} circle - ${this.getArea()}`;
   }
 }
 
 export class Rectangle implements Figure {
-  shape: 'rectangle' = 'rectangle';
+  shape: Shape = 'rectangle';
 
-  color: 'red' | 'green' | 'blue';
+  color: Color;
 
   width: number;
 
   height: number;
 
-  constructor(color: 'red' | 'green' | 'blue', width: number, height: number) {
+  constructor(color: Color, width: number, height: number) {
     if (width <= 0 || height <= 0) {
       throw new Error('Rectangle sides must be greater than 0');
     }
@@ -91,10 +106,15 @@ export class Rectangle implements Figure {
   getArea(): number {
     const area = this.width * this.height;
 
-    return Math.floor(area * 100) / 100;
+    return roundArea(area);
+  }
+
+  describe(): string {
+    return `A ${this.color} rectangle - ${this.getArea()}`;
   }
 }
 
+// Generic info accessor
 export function getInfo(figure: Figure): string {
-  return `A ${figure.color} ${figure.shape} - ${figure.getArea()}`;
+  return figure.describe();
 }
