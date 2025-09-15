@@ -13,7 +13,6 @@ function roundArea(area: number): number {
   return Math.round(area * 100) / 100;
 }
 
-// Triangle validation logic
 function validateTriangle(a: number, b: number, c: number): void {
   if (a <= 0 || b <= 0 || c <= 0) {
     throw new Error('Triangle sides must be greater than 0');
@@ -114,7 +113,6 @@ export class Rectangle implements Figure {
   }
 }
 
-// Generic info accessor
 export function getInfo(figure: Figure): string {
   return figure.describe();
 }
