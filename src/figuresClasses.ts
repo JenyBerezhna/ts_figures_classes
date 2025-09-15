@@ -10,7 +10,7 @@ export interface Figure {
 
 // Utility for consistent area rounding
 function roundArea(area: number): number {
-  return Math.round(area * 100) / 100;
+  return Math.floor(area * 100) / 100;
 }
 
 function validateTriangle(a: number, b: number, c: number): void {
