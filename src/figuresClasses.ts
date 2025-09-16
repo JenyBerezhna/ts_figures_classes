@@ -47,8 +47,16 @@ export class Triangle implements Figure {
   }
 
   getArea(): number {
-    const s = (this.a + this.b + this.c) / 2;
-    const area = Math.sqrt(s * (s - this.a) * (s - this.b) * (s - this.c));
+    const { a, b, c } = this;
+
+    // Triangle inequality check
+    if (a + b <= c || a + c <= b || b + c <= a) {
+      return 0; // throws an error
+    }
+
+    // Heron's formula
+    const s = (a + b + c) / 2;
+    const area = Math.sqrt(s * (s - a) * (s - b) * (s - c));
 
     return roundArea(area);
   }
